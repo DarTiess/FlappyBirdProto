@@ -9,7 +9,6 @@ namespace GamePlay
     public class PlayerMovement : MonoBehaviour
     {
         private ITouchPad _touchPad;
-        private IUpSound _sound;
         private float _upForce;
         
         private  Camera _camera;
@@ -17,13 +16,12 @@ namespace GamePlay
         private  Vector3 _maxPoint;
         private Rigidbody2D _rigidbody;
 
-        public void Init(ITouchPad touchPad,IUpSound sound, float upForce)
+        public void Init(ITouchPad touchPad, float upForce)
         {
             _rigidbody = GetComponent<Rigidbody2D>();
             _camera=Camera.main;
             _rigidbody.constraints = RigidbodyConstraints2D.FreezeAll;
             _touchPad = touchPad;
-            _sound = sound;
             _touchPad.ClickedTouch += MoveUpImpulse;
             _upForce = upForce;
             SetCameraLimits();
@@ -47,7 +45,7 @@ namespace GamePlay
             _rigidbody.constraints = RigidbodyConstraints2D.FreezeRotation;
         }
 
-        public void GameOver()
+        public void GameStop()
         {
             _rigidbody.constraints = RigidbodyConstraints2D.FreezeAll;
         }
@@ -60,7 +58,6 @@ namespace GamePlay
         private void MoveUpImpulse()
         {
             _rigidbody.AddForce(Vector3.up * _upForce, ForceMode2D.Impulse);
-            _sound.PlayUpSound();
         }
     }
 }

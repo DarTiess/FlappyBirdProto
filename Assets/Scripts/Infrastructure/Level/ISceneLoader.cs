@@ -1,8 +1,8 @@
 ﻿namespace Infrastructure.Level
 {
-    public interface ILevelLoader
+    public interface ISceneLoader
     {
-        void LoadNextLevel();
+        void LoadNextScene();
         void RestartScene();
     }
 }

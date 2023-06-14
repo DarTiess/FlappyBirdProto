@@ -1,11 +1,9 @@
 ﻿using System;
 using UnityEngine;
 
-//using GameAnalyticsSDK;
-
 namespace Infrastructure.Level
 {
-    public class LevelManager : ILevelManager, ILevelEvents
+    public class LevelState : ILevelState, ILevelEvents
     {
         public event Action LevelStart;
         public event Action LevelWin;
@@ -18,7 +16,7 @@ namespace Infrastructure.Level
         private float _timeWaitLose;
         private float _timeWaitWin;
         private bool _onPaused;
-        public LevelManager(float timeWaitLose, float timeWaitWin)
+        public LevelState(float timeWaitLose, float timeWaitWin)
         {
             _timeWaitLose = timeWaitLose;
             _timeWaitWin = timeWaitWin;
@@ -28,7 +26,6 @@ namespace Infrastructure.Level
         public void OnLevelStart()
         {
             LevelStart?.Invoke();
-            //GameAnalytics.NewProgressionEvent(GAProgressionStatus.Start, LevelLoader.NumLevel);
         }
 
         public void PauseGame()
@@ -53,9 +50,6 @@ namespace Infrastructure.Level
         public void OnLevelLost()
         {
             LevelLost?.Invoke();
-
-            //GameAnalytics.NewProgressionEvent(GAProgressionStatus.Fail,LevelLoader.NumLevel);
-
             OnLateLost();
         }
 
@@ -71,9 +65,6 @@ namespace Infrastructure.Level
         public void OnLevelWin()
         {
             LevelWin?.Invoke();
-
-            //GameAnalytics.NewProgressionEvent(GAProgressionStatus.Complete,LevelLoader.NumLevel); 
-
             OnLateWin();
         }
 

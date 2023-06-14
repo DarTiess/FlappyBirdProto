@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Infrastructure.Helpers
+namespace Infrastructure
 {
     public class ProgressCleaning : EditorWindow
     {

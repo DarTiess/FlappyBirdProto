@@ -1,5 +1,6 @@
 ﻿using System;
 using Infrastructure;
+using Infrastructure.Coins;
 using Infrastructure.Level;
 using UI.Touch;
 using UI.UIPanels;
@@ -7,7 +8,11 @@ using UnityEngine;
 
 namespace UI
 {
-    public class UIControl : MonoBehaviour, ITouchPad
+    public interface ISoundUIEvent
+    {
+        event Action<bool> ChangeSoundState;
+    }
+    public class UIControl : MonoBehaviour, ITouchPad, ISoundUIEvent
     {
         [Header("Panels")]
         [SerializeField] private StartMenu _panelMenu;
@@ -16,24 +21,28 @@ namespace UI
         [SerializeField] private LostPanel _panelLost;
         [SerializeField] private TouchPad _touchPad;
         [SerializeField] private HeaderPanel _headerPanel;
+        [SerializeField] private SettingsPanel _settingsPanel;
 
         public event Action ClickedTouch;
-        
-        private ILevelManager _levelManager;
+        public event Action<bool> ChangeSoundState; 
+
+        private ILevelState _levelState;
         private ILevelEvents _levelEvents;
-        private ILevelLoader _levelLoader;
+        private ISceneLoader _sceneLoader;
         private ICoinsEvents _coinsEvents;
 
 
-        public void Init(ILevelManager levManager,
+        public void Init(ILevelState levState,
                          ILevelEvents levelEvents,
-                         ILevelLoader levelLoader,
-                         ICoinsEvents coinsEvents)
+                         ISceneLoader sceneLoader,
+                         ICoinsEvents coinsEvents,
+                         bool soundState)
         {
-            _levelManager = levManager;
+            _levelState = levState;
             _levelEvents = levelEvents;
-            _levelLoader = levelLoader;
+            _sceneLoader = sceneLoader;
             _coinsEvents = coinsEvents;
+            _settingsPanel.SetSoundState(soundState);
      
             _levelEvents.LevelStart += OnLevelStart;
             _levelEvents.LateWin += OnLevelWin; 
@@ -41,21 +50,18 @@ namespace UI
             _coinsEvents.ChangeCoins += OnChangeCoins;
 
             _panelMenu.ClickedPanel += OnPlayGame;
+            _panelMenu.ClickedSettingsButton += OnOpenSettings;
             _panelLost.ClickedPanel += RestartGame;
-            _panelInGame.ClickedPanel += OnPauseGame;
             _panelWin.ClickedPanel += LoadNextLevel;
+          
             _touchPad.ClickedTouch += OnClickedTouch;
+            _settingsPanel.ChangeSound += OnChangeSoundState;
             OnLevelStart();
         }
 
-        private void OnChangeCoins(int coins)
+        private void OnChangeSoundState(bool state)
         {
-            _headerPanel.OnChangeCoinsValue(coins);
-        }
-
-        private void OnClickedTouch()
-        {
-            ClickedTouch?.Invoke();
+            ChangeSoundState?.Invoke(state);
         }
 
         private void OnDisable()
@@ -66,10 +72,27 @@ namespace UI
             _coinsEvents.ChangeCoins -= OnChangeCoins;
 
             _panelMenu.ClickedPanel -= OnPlayGame;
+            _panelMenu.ClickedSettingsButton -= OnOpenSettings;
             _panelLost.ClickedPanel -= RestartGame;
-            _panelInGame.ClickedPanel -= OnPauseGame;
             _panelWin.ClickedPanel -= LoadNextLevel;
+          
             _touchPad.ClickedTouch -= OnClickedTouch;
+            _settingsPanel.ChangeSound -= OnChangeSoundState;
+        }
+
+        private void OnOpenSettings()
+        {
+            _settingsPanel.Show();
+        }
+
+        private void OnChangeCoins(int coins)
+        {
+            _headerPanel.OnChangeCoinsValue(coins);
+        }
+
+        private void OnClickedTouch()
+        {
+            ClickedTouch?.Invoke();
         }
 
         private void OnLevelStart()      
@@ -93,26 +116,21 @@ namespace UI
             _panelLost.Show();
         }
 
-        private void OnPauseGame()
-        {
-            _levelManager.PauseGame();
-        }
-
         private void OnPlayGame()
         { 
-            _levelManager.OnPlayGame();
+            _levelState.OnPlayGame();
             HideAllPanels(); 
             _panelInGame.Show();         
         }
 
         private void LoadNextLevel()
         {
-            _levelLoader.LoadNextLevel();
+            _sceneLoader.LoadNextScene();
         }
 
         private void RestartGame()
         {
-            _levelLoader.RestartScene();
+            _sceneLoader.RestartScene();
         }
 
         private void HideAllPanels()
@@ -121,6 +139,7 @@ namespace UI
             _panelLost.Hide();
             _panelWin.Hide();
             _panelInGame.Hide();
+            _settingsPanel.Hide();
         }
     }
 }

@@ -1,9 +1,9 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Infrastructure
+namespace Infrastructure.Coins
 {
-    public class Coins : IAddCoins, ICoinsEvents
+    public class CoinsData : IAddCoins, ICoinsEvents
     {
         public event Action<int> ChangeCoins;
         private const string MONEY = "Money";

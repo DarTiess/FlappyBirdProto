@@ -5,16 +5,12 @@ using UnityEngine.SceneManagement;
 namespace Infrastructure.Level
 {
     [CreateAssetMenu(fileName = "LevelLoader", menuName = "LevelLoader", order = 51)]
-    public class LevelLoader : ScriptableObject, ILevelLoader
+    public class SceneLoader : ScriptableObject, ISceneLoader
     {
         public List<string> NameScene;
 
-        public int NumLevel
-        {
-            get { return PlayerPrefs.GetInt("NumLevel"); }
-            set { PlayerPrefs.SetInt("NumLevel", value); }
-        }
-        public int NumScene
+       
+        private int NumScene
         {                    
             get { return PlayerPrefs.GetInt("NumScene"); }
             set { PlayerPrefs.SetInt("NumScene", value); }
@@ -22,17 +18,13 @@ namespace Infrastructure.Level
 
         public void StartGame()
         {
-            if (NumLevel == 0) NumLevel = 1;
             if (NumScene == 0) NumScene = 1;
-        
             LoadScene();    
         }
 
-        public void LoadNextLevel()
+        public void LoadNextScene()
         {
-            NumLevel += 1;
             NumScene += 1;
-        
             LoadScene();           
         }
 
@@ -41,7 +33,7 @@ namespace Infrastructure.Level
             int numLoadedScene = NumScene;
             if (numLoadedScene <= NameScene.Count){numLoadedScene -= 1;}
             if (numLoadedScene > NameScene.Count){numLoadedScene = (numLoadedScene - 1) % NameScene.Count;}
-            Debug.Log("Load Scene Number " + numLoadedScene + "Level Number " + NumLevel);
+            Debug.Log("Load Scene Number " + numLoadedScene);
 
             SceneManager.LoadScene(NameScene[numLoadedScene]);
         }

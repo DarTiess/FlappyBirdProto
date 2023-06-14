@@ -2,13 +2,12 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace UI
+namespace UI.UIPanels
 {
     public class HeaderPanel : MonoBehaviour
     {
         [SerializeField] private Text textCoins;
         [SerializeField] private Animator textAnimator;
-        
         public void OnChangeCoinsValue(int coins)
         {
             textCoins.text = coins.ToString();

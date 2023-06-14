@@ -1,6 +1,6 @@
 ﻿namespace Infrastructure.Level
 {
-    public interface ILevelManager
+    public interface ILevelState
     {
         void OnLevelStart();
         void PauseGame();

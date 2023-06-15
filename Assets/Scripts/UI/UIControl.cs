@@ -8,11 +8,7 @@ using UnityEngine;
 
 namespace UI
 {
-    public interface ISoundUIEvent
-    {
-        event Action<bool> ChangeSoundState;
-    }
-    public class UIControl : MonoBehaviour, ITouchPad, ISoundUIEvent
+    public class UIControl : MonoBehaviour, ITouchPad, ISoundUIEvent, ILevelUIEvent
     {
         [Header("Panels")]
         [SerializeField] private StartMenu _panelMenu;
@@ -25,29 +21,34 @@ namespace UI
 
         public event Action ClickedTouch;
         public event Action<bool> ChangeSoundState; 
+        public event Action<int> ChangeLevelState; 
 
         private ILevelState _levelState;
         private ILevelEvents _levelEvents;
         private ISceneLoader _sceneLoader;
-        private ICoinsEvents _coinsEvents;
+        private IChangeEconomicEvents _changeEconomicEvents;
+        private ISaveLevelData _saveLevelData;
 
 
         public void Init(ILevelState levState,
                          ILevelEvents levelEvents,
                          ISceneLoader sceneLoader,
-                         ICoinsEvents coinsEvents,
-                         bool soundState)
+                         IChangeEconomicEvents changeEconomicEvents,
+                         ISaveLevelData saveLevelData,
+                         bool soundState, int levelNumber, int maxLevel)
         {
             _levelState = levState;
             _levelEvents = levelEvents;
             _sceneLoader = sceneLoader;
-            _coinsEvents = coinsEvents;
+            _changeEconomicEvents = changeEconomicEvents;
+            _saveLevelData = saveLevelData;
             _settingsPanel.SetSoundState(soundState);
+            _settingsPanel.SetLevelState(levelNumber, maxLevel);
      
             _levelEvents.LevelStart += OnLevelStart;
             _levelEvents.LateWin += OnLevelWin; 
             _levelEvents.LateLost += OnLevelLost;
-            _coinsEvents.ChangeCoins += OnChangeCoins;
+            _changeEconomicEvents.ChangeData += OnChangeEconomicChangeEconomic;
 
             _panelMenu.ClickedPanel += OnPlayGame;
             _panelMenu.ClickedSettingsButton += OnOpenSettings;
@@ -56,12 +57,8 @@ namespace UI
           
             _touchPad.ClickedTouch += OnClickedTouch;
             _settingsPanel.ChangeSound += OnChangeSoundState;
+            _settingsPanel.ChangeLevel += OnChangeLevelState;
             OnLevelStart();
-        }
-
-        private void OnChangeSoundState(bool state)
-        {
-            ChangeSoundState?.Invoke(state);
         }
 
         private void OnDisable()
@@ -69,7 +66,7 @@ namespace UI
             _levelEvents.LevelStart -= OnLevelStart;
             _levelEvents.LateWin -= OnLevelWin; 
             _levelEvents.LateLost -= OnLevelLost;
-            _coinsEvents.ChangeCoins -= OnChangeCoins;
+            _changeEconomicEvents.ChangeData -= OnChangeEconomicChangeEconomic;
 
             _panelMenu.ClickedPanel -= OnPlayGame;
             _panelMenu.ClickedSettingsButton -= OnOpenSettings;
@@ -80,12 +77,22 @@ namespace UI
             _settingsPanel.ChangeSound -= OnChangeSoundState;
         }
 
+        private void OnChangeLevelState(int levelNumber)
+        {
+           _saveLevelData.TrySaveValue(levelNumber);
+        }
+
+        private void OnChangeSoundState(bool state)
+        {
+            ChangeSoundState?.Invoke(state);
+        }
+
         private void OnOpenSettings()
         {
             _settingsPanel.Show();
         }
 
-        private void OnChangeCoins(int coins)
+        private void OnChangeEconomicChangeEconomic(int coins)
         {
             _headerPanel.OnChangeCoinsValue(coins);
         }
@@ -98,7 +105,7 @@ namespace UI
         private void OnLevelStart()      
         {   
             HideAllPanels();
-            _headerPanel.InitCoinsValue(_coinsEvents.GetCoinsValue());
+            _headerPanel.InitCoinsValue(_changeEconomicEvents.LoadValue());
             _panelMenu.Show();
         }
 

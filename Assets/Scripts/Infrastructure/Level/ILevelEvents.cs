@@ -11,5 +11,6 @@ namespace Infrastructure.Level
         event Action LateLost;
         event Action PlayGame;
         event Action StopGame;
+        event Action<Level> ChangeLevelSetting;
     }
 }

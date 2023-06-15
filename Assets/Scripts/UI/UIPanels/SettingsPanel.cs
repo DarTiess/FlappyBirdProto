@@ -16,8 +16,10 @@ namespace UI.UIPanels
         [SerializeField] private Text levelText;
 
         public event Action<bool> ChangeSound;
+        public event Action<int> ChangeLevel;
         private bool _soundON=true;
         private int _levelNumber;
+        private int _maxLevel;
 
         private void Start()
         {
@@ -25,19 +27,29 @@ namespace UI.UIPanels
             soundButton.onClick.AddListener(SwitchSound);
             minusLevelButton.onClick.AddListener(MinusLevel);
             plusLevelButton.onClick.AddListener(PlusLevel);
-           // soundOffImage.gameObject.SetActive(false);
         }
 
         private void PlusLevel()
         {
-            _levelNumber += 1;
-            levelText.text = _levelNumber.ToString();
+            if (_levelNumber <= _maxLevel)
+            {
+                _levelNumber += 1;
+                levelText.text = _levelNumber.ToString();
+                ChangeLevel?.Invoke(_levelNumber-1);
+            }
+           
+            
         }
 
         private void MinusLevel()
         {
-            _levelNumber -= 1;
-            levelText.text = _levelNumber.ToString();
+            if (_levelNumber > 0)
+            {
+                _levelNumber -= 1;
+                levelText.text = _levelNumber.ToString();
+                ChangeLevel?.Invoke(_levelNumber-1);
+            }
+            
         }
 
         private void SwitchSound()
@@ -69,6 +81,13 @@ namespace UI.UIPanels
             _soundON = soundState;
             soundOffImage.gameObject.SetActive(!soundState);
             
+        }
+
+        public void SetLevelState(int levelNumber, int maxLevel)
+        {
+            _levelNumber = levelNumber+1;
+            _maxLevel = maxLevel;
+            levelText.text = _levelNumber.ToString();
         }
     }
 }

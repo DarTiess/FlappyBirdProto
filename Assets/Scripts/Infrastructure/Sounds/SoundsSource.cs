@@ -14,13 +14,13 @@ namespace Infrastructure.Sounds
         [SerializeField] private AudioClip addCoinSound;
         private AudioSource _audioSource;
         private ILevelEvents _levelEvents;
-        private ICoinsEvents _coins;
+        private IChangeEconomicEvents _changeEconomic;
         private ITouchPad _touch;
         private ISoundUIEvent _soundUI;
         private ISoundDataChange _soundData;
        
         public void Init(ILevelEvents levelEvents, 
-                         ICoinsEvents coins, 
+                         IChangeEconomicEvents changeEconomic, 
                          ITouchPad touch, 
                          ISoundUIEvent soundUI, 
                          bool soundState, 
@@ -28,13 +28,13 @@ namespace Infrastructure.Sounds
         {
             _audioSource = GetComponent<AudioSource>();
             _levelEvents = levelEvents;
-            _coins = coins;
+            _changeEconomic = changeEconomic;
             _touch = touch;
             _soundUI = soundUI;
             _soundData = soundData;
             
             _levelEvents.LevelLost += PlayLostSound;
-            _coins.ChangeCoins += PlayAddCoin;
+            _changeEconomic.ChangeData += PlayAddChangeEconomic;
             _touch.ClickedTouch += PlayUpSound;
             _soundUI.ChangeSoundState += OnChangeSoundUIState;
             
@@ -44,7 +44,7 @@ namespace Infrastructure.Sounds
         private void OnDestroy()
         {
             _levelEvents.LevelLost -= PlayLostSound;
-            _coins.ChangeCoins -= PlayAddCoin;
+            _changeEconomic.ChangeData -= PlayAddChangeEconomic;
             _touch.ClickedTouch -= PlayUpSound;
             _soundUI.ChangeSoundState -= OnChangeSoundUIState;
         }
@@ -65,7 +65,7 @@ namespace Infrastructure.Sounds
             ChangeAudio(lostSound);
         }
 
-        private void PlayAddCoin(int coins)
+        private void PlayAddChangeEconomic(int coins)
         {
             ChangeAudio(addCoinSound);
         }

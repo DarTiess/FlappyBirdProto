@@ -1,5 +1,3 @@
-using System;
-using Infrastructure;
 using Infrastructure.Coins;
 using Infrastructure.Level;
 using UI.Touch;
@@ -15,17 +13,17 @@ namespace GamePlay
         private PlayerAnimator _playerAnimator;
         private ILevelState _levelState;
         private ILevelEvents _levelEvents;
-        private IAddCoins _addCoins;
+        private ISaveEconomic _saveEconomic;
         private bool _isDead;
 
         public void Init(ILevelState levelState,
                          ILevelEvents levelEvents,
                          ITouchPad touchPad,
-                         IAddCoins addCoins, 
+                         ISaveEconomic saveEconomic, 
                          float upForce)
         { 
             _levelState = levelState;
-            _addCoins = addCoins;
+            _saveEconomic = saveEconomic;
             _levelEvents = levelEvents;
             _levelEvents.PlayGame += OnStartingPlayGame;
             _levelEvents.StopGame += OnPauseGame;
@@ -73,7 +71,7 @@ namespace GamePlay
         {
             if (!_isDead && col.TryGetComponent<Blocks>(out Blocks blocks))
             {
-                _addCoins.AddCoins();
+                _saveEconomic.SaveValue();
             }
            
         }

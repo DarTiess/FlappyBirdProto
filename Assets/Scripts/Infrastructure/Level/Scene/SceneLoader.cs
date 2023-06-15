@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 
 namespace Infrastructure.Level
 {
-    [CreateAssetMenu(fileName = "LevelLoader", menuName = "LevelLoader", order = 51)]
+    [CreateAssetMenu(fileName = "SceneLoader", menuName = "LevelSettings/SceneLoader", order = 51)]
     public class SceneLoader : ScriptableObject, ISceneLoader
     {
         public List<string> NameScene;

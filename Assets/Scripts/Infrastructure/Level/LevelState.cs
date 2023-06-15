@@ -12,17 +12,27 @@ namespace Infrastructure.Level
         public event Action LateLost;
         public event Action PlayGame;
         public event Action StopGame;
+        public event Action<Level> ChangeLevelSetting;
         
         private float _timeWaitLose;
         private float _timeWaitWin;
         private bool _onPaused;
-        public LevelState(float timeWaitLose, float timeWaitWin)
+        private ILevelChangeData _levelChangeData;
+        public LevelState(ILevelChangeData levelChangeData, float timeWaitLose, float timeWaitWin)
         {
+            _levelChangeData = levelChangeData;
             _timeWaitLose = timeWaitLose;
             _timeWaitWin = timeWaitWin;
+
+            _levelChangeData.ChangeLevelData += OnChangeLevelSettings;
             OnLevelStart();
         }
-    
+
+        private void OnChangeLevelSettings(Level levelSetting)
+        {
+            ChangeLevelSetting?.Invoke(levelSetting);
+        }
+
         public void OnLevelStart()
         {
             LevelStart?.Invoke();

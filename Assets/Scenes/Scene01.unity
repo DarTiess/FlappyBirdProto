@@ -532,7 +532,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   yBlocksPosition: -2.94
-  backGrounds: {fileID: 0}
 --- !u!61 &1091014484
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -875,7 +874,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerPrefab: {fileID: -2950621163490834331, guid: c2e459eba7c9ea84f8c59680b27c0530, type: 3}
-  upForce: 5
+  upForce: 3
   backGrounds: {fileID: 1091014483}
   moveSpeed: 1
   uiPrefab: {fileID: 2201677340117411288, guid: f8c438639e22ef54ba027e3cfd46999b, type: 3}

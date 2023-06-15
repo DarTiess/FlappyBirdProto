@@ -17,8 +17,8 @@ MonoBehaviour:
     Speed: 1
     BlocksCountOnScene: 1
   - LevelNumber: 1
-    Speed: 2
+    Speed: 1.5
     BlocksCountOnScene: 2
   - LevelNumber: 2
-    Speed: 2.3
+    Speed: 2
     BlocksCountOnScene: 3

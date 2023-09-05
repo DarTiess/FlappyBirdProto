@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace UI.UIPanels
@@ -8,11 +9,11 @@ namespace UI.UIPanels
     {
         public override event Action ClickedPanel;
         public event Action ClickedSettingsButton;
-        [SerializeField] private Button settingsButton;
+        [SerializeField] private Button _settingsButton;
 
         private void OnEnable()
         {
-            settingsButton.onClick.AddListener(OpenSettings);
+            _settingsButton.onClick.AddListener(OpenSettings);
         }
 
         private void OpenSettings()

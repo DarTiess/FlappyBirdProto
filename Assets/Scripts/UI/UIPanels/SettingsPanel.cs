@@ -1,19 +1,20 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace UI.UIPanels
 {
     public class SettingsPanel : MonoBehaviour
     {
-        [SerializeField] private Button continueButton;
+        [SerializeField] private Button _continueButton;
         [Header("Sound Settings")]
-        [SerializeField] private Button soundButton;
-        [SerializeField] private Image soundOffImage;
+        [SerializeField] private Button _soundButton;
+        [SerializeField] private Image _soundOffImage;
         [Header("Levels Settings")]
-        [SerializeField] private Button minusLevelButton;
-        [SerializeField] private Button plusLevelButton;
-        [SerializeField] private Text levelText;
+        [SerializeField] private Button _minusLevelButton;
+        [SerializeField] private Button _plusLevelButton;
+        [SerializeField] private Text _levelText;
 
         public event Action<bool> ChangeSound;
         public event Action<int> ChangeLevel;
@@ -23,10 +24,11 @@ namespace UI.UIPanels
 
         private void Start()
         {
-            continueButton.onClick.AddListener(Hide);
-            soundButton.onClick.AddListener(SwitchSound);
-            minusLevelButton.onClick.AddListener(MinusLevel);
-            plusLevelButton.onClick.AddListener(PlusLevel);
+            _continueButton.onClick.AddListener(Hide);
+            _soundButton.onClick.AddListener(SwitchSound);
+            _minusLevelButton.onClick.AddListener(MinusLevel);
+            _plusLevelButton.onClick.AddListener(PlusLevel);
+            SwitchSound();
         }
 
         private void PlusLevel()
@@ -34,11 +36,9 @@ namespace UI.UIPanels
             if (_levelNumber <= _maxLevel)
             {
                 _levelNumber += 1;
-                levelText.text = _levelNumber.ToString();
+                _levelText.text = _levelNumber.ToString();
                 ChangeLevel?.Invoke(_levelNumber-1);
             }
-           
-            
         }
 
         private void MinusLevel()
@@ -46,10 +46,9 @@ namespace UI.UIPanels
             if (_levelNumber > 0)
             {
                 _levelNumber -= 1;
-                levelText.text = _levelNumber.ToString();
+                _levelText.text = _levelNumber.ToString();
                 ChangeLevel?.Invoke(_levelNumber-1);
             }
-            
         }
 
         private void SwitchSound()
@@ -79,7 +78,7 @@ namespace UI.UIPanels
         public void SetSoundState(bool soundState)
         {
             _soundON = soundState;
-            soundOffImage.gameObject.SetActive(!soundState);
+            _soundOffImage.gameObject.SetActive(!soundState);
             
         }
 
@@ -87,7 +86,7 @@ namespace UI.UIPanels
         {
             _levelNumber = levelNumber+1;
             _maxLevel = maxLevel;
-            levelText.text = _levelNumber.ToString();
+            _levelText.text = _levelNumber.ToString();
         }
     }
 }

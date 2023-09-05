@@ -4,28 +4,23 @@ using Infrastructure.Level;
 using Infrastructure.Sounds;
 using UI;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Infrastructure
 {
     public class EntryPoint: MonoBehaviour
     {
         [Header("Player Settings")]
-        [SerializeField] private Player playerPrefab;
-        [SerializeField] private float upForce=5f;
+        [SerializeField] private PlayerConfig _playerConfig;
         [Header("BackGround Settings")]
-        [SerializeField] private BackGround backGrounds;
-        [SerializeField] private float moveSpeed=1f;
+        [SerializeField] private BackGround _backGrounds;
+        [SerializeField] private float _moveSpeed=1f;
         [Header("Ui Settings")]
-        [SerializeField] private UIControl uiPrefab;
-        [FormerlySerializedAs("_sceneLoader")]
-        [FormerlySerializedAs("levelLoader")]
+        [SerializeField] private UIControl _uiPrefab;
         [Header("Level Settings")]
-        [SerializeField] private SceneLoader sceneLoader;
-        [SerializeField] private float waitTimeToLose=2f;
-        [SerializeField] private float waitTimeToWin=3f;
-        [SerializeField] private LevelContainer levelContainer;
-        [FormerlySerializedAs("sounds")]
+        [SerializeField] private SceneLoader _sceneLoader;
+        [SerializeField] private float _waitTimeToLose=2f;
+        [SerializeField] private float _waitTimeToWin=3f;
+        [SerializeField] private LevelContainer _levelContainer;
         [Header("Sound Settings")]
         [SerializeField] private SoundsSource _soundsSource;
 
@@ -46,7 +41,7 @@ namespace Infrastructure
             CreateSoundData();
             CreateLevelData();
             
-            _levelState = new LevelState(_levelLoader,waitTimeToLose, waitTimeToWin);
+            _levelState = new LevelState(_levelLoader,_waitTimeToLose, _waitTimeToWin);
             CreateAndInitUIWindow();
             CreateAndInitPlayer();
             InitSoundSourceOnLevel();
@@ -66,24 +61,24 @@ namespace Infrastructure
 
         private void CreateLevelData()
         {
-            _levelLoader = new LevelLoader(levelContainer);
+            _levelLoader = new LevelLoader(_levelContainer);
             _currentLevel = _levelLoader.LoadValue();
             _maxValue = _levelLoader.GetMaxLevelValue();
-            _currentLevelSettings = levelContainer.TryGetLevelSettings(_currentLevel);
+            _currentLevelSettings = _levelContainer.TryGetLevelSettings(_currentLevel);
 
         }
 
         private void CreateAndInitUIWindow()
         {
-            _ui = Instantiate(uiPrefab);
-            _ui.Init(_levelState, _levelState, sceneLoader,
+            _ui = Instantiate(_uiPrefab);
+            _ui.Init(_levelState, _levelState, _sceneLoader,
                      _economic,_levelLoader, _soundState,_currentLevel, _maxValue);
         }
 
         private void CreateAndInitPlayer()
         {
-            _player = Instantiate(playerPrefab, transform.position, Quaternion.identity);
-            _player.Init(_levelState, _levelState, _ui, _economic, upForce);
+            _player = Instantiate(_playerConfig.Player, transform.position, Quaternion.identity);
+            _player.Init(_levelState, _levelState, _ui, _economic,_playerConfig);
         }
 
         private void InitSoundSourceOnLevel()
@@ -93,7 +88,7 @@ namespace Infrastructure
 
         private void InitBackground()
         {
-            backGrounds.Init(_levelState, _currentLevelSettings.Speed, _currentLevelSettings.BlocksCountOnScene);
+            _backGrounds.Init(_levelState, _currentLevelSettings.Speed, _currentLevelSettings.BlocksCountOnScene);
         }
     }
 }

@@ -5,10 +5,11 @@ namespace Infrastructure.Level
 {
     public class LevelLoader : ISaveLevelData, ILevelChangeData
     {
-        public event Action<Level> ChangeLevelData;
         private LevelData _levelData;
         private ILevelContainer _levelContainer;
         private Level _currentLevelSettings;
+       
+        public event Action<Level> ChangeLevelData;
 
         public LevelLoader(ILevelContainer levelContainer)
         {

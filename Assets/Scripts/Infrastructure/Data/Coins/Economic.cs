@@ -4,8 +4,8 @@ namespace Infrastructure.Coins
 {
     public class Economic : ISaveEconomic, IChangeEconomicEvents
     {
-        public event Action<int> ChangeData;
         private CoinData _coinData;
+        public event Action<int> ChangeData;
 
         public Economic()
         {

@@ -1,21 +1,17 @@
 ﻿using UnityEngine;
-using UnityEngine.Serialization;
-using AppsFlyerSDK;
 using Infrastructure.Level;
 using UnityEngine.UI;
 
 public class StartGame : MonoBehaviour
 {
-    [FormerlySerializedAs("LevelLoader")]
-    public SceneLoader _sceneLoader;
-    [SerializeField]
-    private Text TextData;
-    [SerializeField] private Button continueButton;
+    [SerializeField] private SceneLoader _sceneLoader;
+    [SerializeField] private Text _textData;
+    [SerializeField] private Button _continueButton;
   
     private void Start()
     {
-        AppsFlyer.UnityCallBack += OnConversionDataReceived;
-        continueButton.onClick.AddListener(NextScene);
+      //  AppsFlyer.UnityCallBack += OnConversionDataReceived;
+        _continueButton.onClick.AddListener(NextScene);
     }
 
     private void NextScene()
@@ -26,7 +22,7 @@ public class StartGame : MonoBehaviour
     private void OnConversionDataReceived(string conversionData)
     {
         Debug.Log("ConversionData: " + conversionData);
-        TextData.text = conversionData;
+        _textData.text = conversionData;
     }
 }
 

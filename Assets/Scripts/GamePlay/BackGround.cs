@@ -10,7 +10,7 @@ namespace GamePlay
     [RequireComponent(typeof(BlocksSpawner))]
     public class BackGround: MonoBehaviour
     {
-        [SerializeField] private float yBlocksPosition=-2.94f;
+        [SerializeField] private float _yBlocksPosition=-2.94f;
        
         private Vector3 _startPosition;
         private float _halfSize;
@@ -58,7 +58,7 @@ namespace GamePlay
             _levelEvents.LevelLost += StopMoving;
             _levelEvents.ChangeLevelSetting += ChangeSettings;
 
-            _blocksSpawner.CreateBlocks(transform.position+new Vector3(_halfSize,yBlocksPosition,0f),
+            _blocksSpawner.CreateBlocks(transform.position+new Vector3(_halfSize,_yBlocksPosition,0f),
                                         transform, countBlocks);
         }
 

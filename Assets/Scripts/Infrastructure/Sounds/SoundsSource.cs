@@ -3,15 +3,17 @@ using Infrastructure.Level;
 using UI;
 using UI.Touch;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Infrastructure.Sounds
 {
     [RequireComponent(typeof(AudioSource))]
     public class SoundsSource : MonoBehaviour
     {
-        [SerializeField] private AudioClip upSound;
-        [SerializeField] private AudioClip lostSound;
-        [SerializeField] private AudioClip addCoinSound;
+        [SerializeField] private AudioClip _upSound;
+        [SerializeField] private AudioClip _lostSound;
+        [SerializeField] private AudioClip _addCoinSound;
+      
         private AudioSource _audioSource;
         private ILevelEvents _levelEvents;
         private IChangeEconomicEvents _changeEconomic;
@@ -57,17 +59,17 @@ namespace Infrastructure.Sounds
 
         private void PlayUpSound()
         {
-            ChangeAudio(upSound);
+            ChangeAudio(_upSound);
         }
 
         private void PlayLostSound()
         {
-            ChangeAudio(lostSound);
+            ChangeAudio(_lostSound);
         }
 
         private void PlayAddChangeEconomic(int coins)
         {
-            ChangeAudio(addCoinSound);
+            ChangeAudio(_addCoinSound);
         }
 
         private void ChangeAudio(AudioClip clip)
